@@ -1,7 +1,7 @@
 /*
     This file contains the main function to test the Graph class.
     Compile with command: g++ -std=gnu++11 *.cpp
-    Compile and run in Windows: g++ -std=gnu++11 *.cpp & .\a.exe
+    Compile and run in VSCode(Window OS): g++ -std=gnu++11 *.cpp;.\a.exe
 */
 
 #include "Graph.hpp"

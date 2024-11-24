@@ -27,6 +27,8 @@ void Graph::addVertex(string label) {
   // Add the new vertex if it doesn't exist
   if (vertices.find(label) == vertices.end()) {
     vertices[label] = new Vertex(label);
+  } else {
+    throw invalid_argument("The vertex already exists.");
   }
 }
 
@@ -54,31 +56,50 @@ void Graph::removeVertex(string label) {
 // Add an edge to the graph
 void Graph::addEdge(string label1, string label2, unsigned long weight) {
   // Check if the both vertices exist
-  if (vertices.find(label1) != vertices.end() &&
-      vertices.find(label2) != vertices.end()) {
-    // Get the pointers to vertices with the given labels
-    Vertex *vertex1 = vertices[label1];
-    Vertex *vertex2 = vertices[label2];
-
-    // Add the edge between the vertices
-    vertex1->addEdge(vertex2, weight);
-    vertex2->addEdge(vertex1, weight);
+  if (vertices.find(label1) == vertices.end() ||
+      vertices.find(label2) == vertices.end()) {
+    throw invalid_argument("Some of the vertices do not exist.");
   }
+
+  // A vertex can not have an edge to itself
+  if (label1 == label2) {
+    throw invalid_argument("Start and end vertices can not be the same.");
+  }
+
+  // Get the pointers to vertices with the given labels
+  Vertex *vertex1 = vertices[label1];
+  Vertex *vertex2 = vertices[label2];
+
+  // There must not already be an edge between the vertices
+  if (vertex1->hasEdge(vertex2) || vertex2->hasEdge(vertex1)) {
+    throw invalid_argument("The edge already exists.");
+  }
+
+  // Add the edge between the vertices
+  vertex1->addEdge(vertex2, weight);
+  vertex2->addEdge(vertex1, weight);
 }
 
 // Remove an edge from the graph
 void Graph::removeEdge(string label1, string label2) {
   // Check if the both vertices exist
-  if (vertices.find(label1) != vertices.end() &&
-      vertices.find(label2) != vertices.end()) {
-    // Get the pointers to vertices with the given labels
-    Vertex *vertex1 = vertices[label1];
-    Vertex *vertex2 = vertices[label2];
-
-    // Remove the edge between the vertices
-    vertex1->removeEdge(vertex2);
-    vertex2->removeEdge(vertex1);
+  if (vertices.find(label1) == vertices.end() ||
+      vertices.find(label2) == vertices.end()) {
+    throw invalid_argument("Some of the vertices do not exist.");
   }
+
+  // Get the pointers to vertices with the given labels
+  Vertex *vertex1 = vertices[label1];
+  Vertex *vertex2 = vertices[label2];
+
+  // There must be an edge between the vertices
+  if (!vertex1->hasEdge(vertex2) || !vertex2->hasEdge(vertex1)) {
+    throw invalid_argument("The edge does not exist.");
+  }
+
+  // Remove the edge between the vertices
+  vertex1->removeEdge(vertex2);
+  vertex2->removeEdge(vertex1);
 }
 
 // CompareVertex struct to compare vertices based on the distance

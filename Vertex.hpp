@@ -18,6 +18,8 @@ public:
   void addEdge(Vertex *vertex, unsigned long weight) { edges[vertex] = weight; }
   // Function to remove an edge from the vertex
   void removeEdge(Vertex *vertex) { edges.erase(vertex); }
+  // Function to check if the vertex has an edge to another vertex
+  bool hasEdge(Vertex *vertex) { return edges.find(vertex) != edges.end(); }
   // Function to get the label of the vertex
   string getLabel() const { return label; }
   // Function to get the edges of the vertex
